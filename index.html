@@ -1,0 +1,341 @@
+<html><head><base href="/" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
+<style>
+    body {
+        margin: 0;
+        padding: 20px;
+        background: #090909;
+        color: #d6dcdc;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        display: flex;
+        gap: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .form-container {
+        flex: 1;
+        background: #111111;
+        padding: 20px;
+        border: 1px solid #1e1e1e;
+        border-radius: 8px;
+        font-family: Arial, sans-serif;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+        width: 100%;
+        position: relative;
+    }
+
+    label {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: all 0.2s ease-out;
+        background: #111111;
+        padding: 0 5px;
+        color: #888;
+        pointer-events: none;
+    }
+
+    .textarea-label {
+        top: 25px;
+    }
+
+    input:focus + label,
+    textarea:focus + label,
+    input:not(:placeholder-shown) + label,
+    textarea:not(:placeholder-shown) + label {
+        top: -10px;
+        font-size: 12px;
+        color: #d6dcdc;
+    }
+
+    input, textarea {
+        width: 100%;
+        padding: 12px;
+        background: #111111;
+        border: 1px solid #1e1e1e;
+        border-radius: 4px;
+        color: #d6dcdc;
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        height: 100px;
+        resize: none;
+    }
+
+    button {
+        width: 100%;
+        background: #d6dcdc;
+        color: #090909;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+    }
+
+    button:hover {
+        background: #b8bfbf;
+    }
+
+    .file-input-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
+    .file-input-wrapper input[type="file"] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .file-input-button {
+        display: block;
+        width: 100%;
+        background: #d6dcdc;
+        color: #090909;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .file-input-button:hover {
+        background: #b8bfbf;
+    }
+
+    .poster {
+        width: 400px;
+        height: 600px;
+        background: #111111;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid #1e1e1e;
+        border-radius: 8px;
+    }
+
+    .title {
+        font-size: 18px;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+        color: #d6dcdc;
+        font-family: "Courier New", monospace;
+    }
+
+    .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        height: calc(100% - 120px);
+        margin-bottom: 20px;
+    }
+
+    .main-content {
+        height: 100%;
+        background: #111111;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid #1e1e1e;
+        border-radius: 8px;
+        flex-shrink: 0;
+        min-width: 160px;
+    }
+
+    .main-content img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .info {
+        padding: 10px;
+        font-size: 12px;
+        line-height: 1.6;
+        color: #d6dcdc;
+        font-family: "Courier New", monospace;
+        max-height: calc(12 * 1.6em);
+        overflow-y: auto;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+    }
+
+    .metadata {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        font-size: 12px;
+        color: #d6dcdc;
+        font-family: "Courier New", monospace;
+    }
+
+    .release-info {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        text-align: right;
+        font-size: 12px;
+        color: #d6dcdc;
+        font-family: "Courier New", monospace;
+    }
+
+    .divider {
+        width: 30px;
+        height: 2px;
+        background: #d6dcdc;
+        margin: 10px 0;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <form id="posterForm">
+                <div class="form-group">
+                    <div class="file-input-wrapper">
+                        <input type="file" id="imageInput" accept="image/*" required>
+                        <div class="file-input-button">Add Art</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="titleInput" placeholder=" " required>
+                    <label for="titleInput">Title</label>
+                </div>
+                <div class="form-group">
+                    <textarea id="descriptionInput" placeholder=" " required></textarea>
+                    <label for="descriptionInput" class="textarea-label">Description</label>
+                </div>
+                <div class="form-group">
+                    <textarea id="artistsInput" placeholder=" " required></textarea>
+                    <label for="artistsInput" class="textarea-label">Artist Names (one per line)</label>
+                </div>
+                <div class="form-group">
+                    <input type="date" id="releaseDateInput" placeholder=" " required>
+                    <label for="releaseDateInput">Release Date</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="catalogInput" placeholder=" " required>
+                    <label for="catalogInput">Catalog Number</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="formatInput" placeholder=" " required>
+                    <label for="formatInput">Format</label>
+                </div>
+                <button type="button" id="downloadBtn">Download Poster</button>
+            </form>
+        </div>
+
+        <div class="poster" id="poster">
+            <div class="title" id="posterTitle">>> SONIC ELEVATION</div>
+            
+            <div class="content-grid">
+                <div class="main-content">
+                    <img id="posterImage" src="/a/1c3ab908-b706-4ee7-935a-d1cfa7e0e7c7" alt="Poster Image">
+                </div>
+                <div class="info" id="posterInfo">
+                    QUANTUM BEATS PRESENTS <br/>
+                    NEW FREQUENCIES VOL.2 <br/>
+                    FEATURING TRACKS FROM <br/>
+                    ORBITAL MECHANICS <br/>
+                    SOLAR DRIFT <br/>
+                    COSMIC WAVE
+                </div>
+            </div>
+
+            <div class="metadata" id="posterMetadata">
+                // RELEASE DATE: 2024.03.15 <br/>
+                // CATALOG: QB-0472 <br/>
+                // FORMAT: DIGITAL + LIMITED VINYL
+            </div>
+
+            <div class="release-info">
+                <div class="divider"></div>
+                QUANTUM BEATS RECORDS <br/>
+                ESTABLISHED 2020
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updatePoster() {
+            const titleValue = document.getElementById('titleInput').value;
+            if(titleValue) {
+                document.getElementById('posterTitle').innerHTML = '>> ' + titleValue;
+            }
+            
+            const description = document.getElementById('descriptionInput').value;
+            const artists = document.getElementById('artistsInput').value.split('\n');
+            if(description || artists.some(artist => artist.trim())) {
+                let infoHTML = description + '<br/><br/>FEATURING TRACKS FROM <br/>';
+                artists.forEach(artist => {
+                    if(artist.trim()) infoHTML += artist.trim() + '<br/>';
+                });
+                document.getElementById('posterInfo').innerHTML = infoHTML;
+            }
+            
+            const releaseDate = document.getElementById('releaseDateInput').value;
+            const catalogValue = document.getElementById('catalogInput').value;
+            const formatValue = document.getElementById('formatInput').value;
+            
+            if(releaseDate || catalogValue || formatValue) {
+                const formattedDate = releaseDate ? new Date(releaseDate).toISOString().slice(0,10).replace(/-/g, '.') : '';
+                document.getElementById('posterMetadata').innerHTML = 
+                    `// RELEASE DATE: ${formattedDate} <br/>` +
+                    `// CATALOG: ${catalogValue} <br/>` +
+                    `// FORMAT: ${formatValue}`;
+            }
+        }
+
+        document.querySelectorAll('#posterForm input, #posterForm textarea').forEach(input => {
+            input.addEventListener('input', updatePoster);
+        });
+
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('posterImage').src = event.target.result;
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            htmlToImage.toPng(document.getElementById('poster'), {
+                quality: 1.0,
+                pixelRatio: 2
+            })
+            .then(function(dataUrl) {
+                const link = document.createElement('a');
+                link.download = 'poster.png';
+                link.href = dataUrl;
+                link.click();
+            })
+            .catch(function(error) {
+                console.error('Error generating image:', error);
+            });
+        });
+    </script>
+</body></html>
