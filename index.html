@@ -288,7 +288,7 @@
             const description = document.getElementById('descriptionInput').value;
             const artists = document.getElementById('artistsInput').value.split('\n');
             if(description || artists.some(artist => artist.trim())) {
-                let infoHTML = description + '<br/><br/>FEATURING TRACKS FROM <br/>';
+                let infoHTML = description + '<br/><br/>DETAILS<br/>';
                 artists.forEach(artist => {
                     if(artist.trim()) infoHTML += artist.trim() + '<br/>';
                 });
